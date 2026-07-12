@@ -1,11 +1,14 @@
 using UnityEngine;
+using Bunshimokei.Core.ValueObjects;
 
-/// <summary>
-/// 結合1本分のデータ（Unity非依存のPure C#モデル）。
-/// M1では常にorder=1（単結合）のみを扱う。
-/// 二重結合・三重結合はM2以降で対応。
-/// </summary>
-[System.Serializable]
+namespace Bunshimokei.Core.Models;
+
+    /// <summary>
+    /// 結合1本分のデータ（Unity非依存のPure C#モデル）。
+    /// M1では常にorder=1（単結合）のみを扱う。
+    /// 二重結合・三重結合はM2以降で対応。
+    /// </summary>
+    [System.Serializable]
 public class BondData
 {
     [SerializeField] private int atomAId;

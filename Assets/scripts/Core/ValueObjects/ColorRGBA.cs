@@ -1,5 +1,7 @@
 using System;
 
+namespace Bunshimokei.Core.ValueObjects;
+
 public readonly struct ColorRGBA
 {
     public float R { get; }

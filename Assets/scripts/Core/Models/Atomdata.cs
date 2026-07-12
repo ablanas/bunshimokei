@@ -1,4 +1,8 @@
 using System;
+using Bunshimokei.Core.ValueObjects;
+using Bunshimokei.Core.Definitions;
+
+namespace Bunshimokei.Core.Models;
 
 /// <summary>
 /// 原子1個分のデータ（Unity非依存のPure C#モデル）。

@@ -1,10 +1,14 @@
 using System.Text.Json.Serialization;
 using System;
+using Bunshimokei.Core.ValueObjects;
 
-/// <summary>
-/// 元素1種類分のデータ定義。
-/// </summary>
-public sealed class ElementDefinition
+namespace Bunshimokei.Core.Definitions;
+
+
+    /// <summary>
+    /// 元素1種類分のデータ定義。
+    /// </summary>
+    public sealed class ElementDefinition
 {
     public string Symbol { get; }
     public string DisplayName { get; }

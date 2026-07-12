@@ -1,4 +1,7 @@
 using System;
+using Bunshimokei.Core.ValueObjects;
+
+namespace Bunshimokei.Core.ValueObjects;
 
 public readonly struct AtomId
 {

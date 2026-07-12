@@ -10,7 +10,7 @@ namespace Bunshimokei.Core.Definitions;
 /// </summary>
 public sealed class ElementDefinition
 {
-    public string Symbol { get; }
+    public ElementSymbol Symbol { get; }
     public string DisplayName { get; }
     public int AtomicNumber { get; }
     public int Valence { get; }
@@ -21,7 +21,7 @@ public sealed class ElementDefinition
 
     [JsonConstructor]
     public ElementDefinition(
-        string symbol,
+        ElementSymbol symbol,
         string displayName,
         int atomicNumber,
         int valence,
@@ -30,7 +30,6 @@ public sealed class ElementDefinition
         float vanDerWaalsRadiusPm,
         float stickDisplayScale = 0.25f)
     {
-        if (string.IsNullOrWhiteSpace(symbol)) throw new ArgumentException("Symbol is required.", nameof(symbol));
         if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Display name is required.", nameof(displayName));
         if (atomicNumber <= 0) throw new ArgumentOutOfRangeException(nameof(atomicNumber));
         if (valence < 0) throw new ArgumentOutOfRangeException(nameof(valence));

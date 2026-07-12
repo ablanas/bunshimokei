@@ -1,39 +1,69 @@
-using UnityEngine;
-
 /// <summary>
 /// 元素1種類分のデータ定義。
-/// Project上で「Create > MoleculeBuilder > Element Definition」から
-/// H, C, N, O, S, P, F, Cl, Br, I などを1つずつアセットとして作成する。
 /// </summary>
-[CreateAssetMenu(fileName = "NewElement", menuName = "MoleculeBuilder/Element Definition")]
-public class ElementDefinition : ScriptableObject
+public sealed class ElementDefinition
 {
-    [Header("基本情報")]
-    [SerializeField] private string symbol;        // 例: "H", "C", "O"
-    [SerializeField] private string displayName;   // 例: "Hydrogen", "水素"
-    [SerializeField] private int atomicNumber;
+    public string Symbol { get; }
+    public string DisplayName { get; }
+    public int AtomicNumber { get; }
+    public int Valence { get; }
+    public ColorRGBA Color { get; }
+    public float CovalentRadiusPm { get; }
+    public float VanDerWaalsRadiusPm { get; }
+    public float StickDisplayScale { get; }
 
-    [Header("化学的性質")]
-    [Tooltip("標準的な価数（結合本数の上限）。M1では単結合のみなのでそのまま結合可能数として扱う。")]
-    [SerializeField] private int valence;
+    [JsonConstructor]
+    public ElementDefinition(
+        string symbol,
+        string displayName,
+        int atomicNumber,
+        int valence,
+        ColorRGBA color,
+        float covalentRadiusPm,
+        float vanDerWaalsRadiusPm,
+        float stickDisplayScale = 0.25f)
+    {
+        if (string.IsNullOrWhiteSpace(symbol)) throw new ArgumentException("Symbol is required.", nameof(symbol));
+        if (string.IsNullOrWhiteSpace(displayName)) throw new ArgumentException("Display name is required.", nameof(displayName));
+        if (atomicNumber <= 0) throw new ArgumentOutOfRangeException(nameof(atomicNumber));
+        if (valence < 0) throw new ArgumentOutOfRangeException(nameof(valence));
+        if (covalentRadiusPm < 0) throw new ArgumentOutOfRangeException(nameof(covalentRadiusPm));
+        if (vanDerWaalsRadiusPm < 0) throw new ArgumentOutOfRangeException(nameof(vanDerWaalsRadiusPm));
+        if (stickDisplayScale < 0) throw new ArgumentOutOfRangeException(nameof(stickDisplayScale));
 
-    [Header("見た目 (CPK配色を目安に)")]
-    [SerializeField] private Color color = Color.white;
+        Symbol = symbol;
+        DisplayName = displayName;
+        AtomicNumber = atomicNumber;
+        Valence = valence;
+        Color = color;
+        CovalentRadiusPm = covalentRadiusPm;
+        VanDerWaalsRadiusPm = vanDerWaalsRadiusPm;
+        StickDisplayScale = stickDisplayScale;
+    }
+}
 
-    [Header("実サイズ（pm、参考値）")]
-    [SerializeField] private float covalentRadiusPm;      // 結合距離の計算・Ball-and-Stick表示に使用
-    [SerializeField] private float vanDerWaalsRadiusPm;   // Space-Filling表示に使用
+public readonly struct ColorRGBA
+{
+    public float R { get; }
+    public float G { get; }
+    public float B { get; }
+    public float A { get; }
 
-    [Header("表示調整")]
-    [Tooltip("Ball-and-Stick時、共有結合半径に対してどれくらい縮小して表示するか(0〜1)")]
-    [SerializeField, Range(0f, 1f)] private float stickDisplayScale = 0.25f;
+    public ColorRGBA(float r, float g, float b, float a = 1f)
+    {
+        if (r < 0f || r > 1f) throw new ArgumentOutOfRangeException(nameof(r));
+        if (g < 0f || g > 1f) throw new ArgumentOutOfRangeException(nameof(g));
+        if (b < 0f || b > 1f) throw new ArgumentOutOfRangeException(nameof(b));
+        if (a < 0f || a > 1f) throw new ArgumentOutOfRangeException(nameof(a));
 
-    public string Symbol => symbol;
-    public string DisplayName => displayName;
-    public int AtomicNumber => atomicNumber;
-    public int Valence => valence;
-    public Color Color => color;
-    public float CovalentRadiusPm => covalentRadiusPm;
-    public float VanDerWaalsRadiusPm => vanDerWaalsRadiusPm;
-    public float StickDisplayScale => stickDisplayScale;
+        R = r;
+        G = g;
+        B = b;
+        A = a;
+    }
+
+    public override string ToString()
+    {
+        return $"({R}, {G}, {B}, {A})";
+    }
 }

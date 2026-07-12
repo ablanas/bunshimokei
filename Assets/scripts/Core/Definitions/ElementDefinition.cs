@@ -5,10 +5,10 @@ using Bunshimokei.Core.ValueObjects;
 namespace Bunshimokei.Core.Definitions;
 
 
-    /// <summary>
-    /// 元素1種類分のデータ定義。
-    /// </summary>
-    public sealed class ElementDefinition
+/// <summary>
+/// 元素1種類分のデータ定義。
+/// </summary>
+public sealed class ElementDefinition
 {
     public string Symbol { get; }
     public string DisplayName { get; }

@@ -1,5 +1,6 @@
-using UnityEngine;
+using Bunshimokei.Core.Enums;
 using Bunshimokei.Core.ValueObjects;
+using System;
 
 namespace Bunshimokei.Core.Models;
 
@@ -8,28 +9,30 @@ namespace Bunshimokei.Core.Models;
     /// M1では常にorder=1（単結合）のみを扱う。
     /// 二重結合・三重結合はM2以降で対応。
     /// </summary>
-    [System.Serializable]
-public class BondData
+public sealed class BondData
 {
-    [SerializeField] private int atomAId;
-    [SerializeField] private int atomBId;
-    [SerializeField] private int order = 1;
+    public AtomId AtomAId { get; }
+    public AtomId AtomBId { get; }
+    public BondOrder BondOrder { get; }
 
-    public int AtomAId => atomAId;
-    public int AtomBId => atomBId;
-    public int Order => order;
-
-    public BondData(int atomAId, int atomBId)
+    public BondData(
+        AtomId atomAId, 
+        AtomId atomBId, 
+        BondOrder bondOrder = BondOrder.Single)
     {
+        if (atomAId == atomBId) throw new ArgumentException("A bond must connect two different atoms.");
+
         if (atomAId < atomBId)
         {
-            this.atomAId = atomAId;
-            this.atomBId = atomBId;
+            AtomAId = atomAId;
+            AtomBId = atomBId;
         }
         else
         {
-            this.atomAId = atomBId;
-            this.atomBId = atomAId;
+            AtomAId = atomBId;
+            AtomBId = atomAId;
         }
+
+        BondOrder = bondOrder;
     }
 }

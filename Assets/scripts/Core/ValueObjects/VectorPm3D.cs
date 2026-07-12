@@ -1,5 +1,3 @@
-using System;
-
 namespace Bunshimokei.Core.ValueObjects;
 
 public readonly struct VectorPm3D

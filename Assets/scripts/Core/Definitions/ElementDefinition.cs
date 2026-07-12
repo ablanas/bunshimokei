@@ -19,7 +19,6 @@ public sealed class ElementDefinition
     public float VanDerWaalsRadiusPm { get; }
     public float StickDisplayScale { get; }
 
-    [JsonConstructor]
     public ElementDefinition(
         ElementSymbol symbol,
         string displayName,

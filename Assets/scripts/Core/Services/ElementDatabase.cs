@@ -20,7 +20,7 @@ public sealed class ElementDatabase
     {
         if (definitions == null) throw new ArgumentNullException(nameof(definitions));
 
-        foreach (ElementDefinition element in definitions)
+        foreach (var element in definitions)
         {
             Add(element);
         }
@@ -28,7 +28,7 @@ public sealed class ElementDatabase
 
     public ElementDefinition Get(ElementSymbol symbol)
     {
-        if (!_elements.TryGetValue(symbol, out ElementDefinition definition))
+        if (!_elements.TryGetValue(symbol, out var definition))
         {
             throw new KeyNotFoundException(
                 $"Element '{symbol}' was not found.");

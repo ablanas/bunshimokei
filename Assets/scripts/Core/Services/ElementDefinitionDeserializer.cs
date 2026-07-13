@@ -1,7 +1,6 @@
 using Bunshimokei.Core.Definitions;
 using Bunshimokei.Core.ValueObjects;
 using System;
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Bunshimokei.Core.Serialization;
@@ -13,27 +12,20 @@ public sealed class ElementDefinitionDeserializer
         PropertyNameCaseInsensitive = true
     };
 
-    public IReadOnlyList<ElementDefinition> Deserialize(string json)
+    public ElementDefinition Deserialize(string json)
     {
         if (json == null)
             throw new ArgumentNullException(nameof(json));
 
-        var rawElements = JsonSerializer.Deserialize<List<ElementDefinitionJson>>(json, _options);
+        var element = JsonSerializer.Deserialize<ElementDefinitionJson>(json, _options);
 
-        if (rawElements == null)
+        if (element == null)
         {
             throw new InvalidOperationException(
-                "Failed to deserialize element definitions.");
+                "Failed to deserialize element definition.");
         }
 
-        var elements = new List<ElementDefinition>();
-
-        foreach (var raw in rawElements)
-        {
-            elements.Add(CreateDefinition(raw));
-        }
-
-        return elements;
+        return CreateDefinition(element);
     }
 
     private static ElementDefinition CreateDefinition(ElementDefinitionJson raw)

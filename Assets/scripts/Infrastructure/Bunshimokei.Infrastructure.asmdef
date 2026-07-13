@@ -1,0 +1,16 @@
+{
+    "name": "Bunshimokei.Infrastructure",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a4fa56c8ff246824ba4b55c96f19081f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

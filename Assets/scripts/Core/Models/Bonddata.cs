@@ -35,4 +35,9 @@ public sealed class BondData
 
         BondOrder = bondOrder;
     }
+
+    public bool Contains(AtomId atomId)
+    {
+        return AtomAId == atomId || AtomBId == atomId;
+    }
 }

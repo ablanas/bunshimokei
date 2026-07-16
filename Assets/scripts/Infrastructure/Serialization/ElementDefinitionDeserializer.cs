@@ -3,7 +3,7 @@ using Bunshimokei.Core.ValueObjects;
 using System;
 using System.Text.Json;
 
-namespace Bunshimokei.Core.Serialization;
+namespace Bunshimokei.Infrastructure.Serialization;
 
 public sealed class ElementDefinitionDeserializer
 {

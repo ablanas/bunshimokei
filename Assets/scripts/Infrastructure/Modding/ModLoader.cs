@@ -1,5 +1,5 @@
 using Bunshimokei.Core.Definitions;
-using Bunshimokei.Core.Serialization;
+using Bunshimokei.Infrastructure.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;

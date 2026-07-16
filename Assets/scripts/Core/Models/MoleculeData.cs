@@ -98,4 +98,18 @@ public sealed class MoleculeData
 
         _atoms.Remove(id);
     }
+
+    public void MoveAtom(
+        AtomId atomId,
+        VectorPm3D position)
+    {
+        if (!Atoms.TryGetValue(
+                atomId,
+                out AtomData? atom))
+        {
+            return;
+        }
+
+        atom.Position = position;
+    }
 }

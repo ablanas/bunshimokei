@@ -56,4 +56,35 @@ public sealed class SnapService
 
         return closest;
     }
+
+    public VectorPm3D CalculateSnapPosition(
+    AtomData draggedAtom,
+    AtomData targetAtom,
+    VectorPm3D currentPosition)
+    {
+        float idealDistance =
+            draggedAtom.Element.CovalentRadiusPm
+            + targetAtom.Element.CovalentRadiusPm;
+
+
+        VectorPm3D direction =
+            currentPosition - targetAtom.Position;
+
+
+        if (direction.LengthSquared < 1e-6f)
+        {
+            direction = new VectorPm3D(
+                1f,
+                0f,
+                0f);
+        }
+        else
+        {
+            direction = direction.Normalized;
+        }
+
+
+        return targetAtom.Position
+            + direction * idealDistance;
+    }
 }

@@ -24,7 +24,7 @@ public sealed class BondValidator : IBondValidator
 
 
         // すでに結合しているか
-        if (molecule.Bonds.Any(
+        if (molecule.Bonds.Values.Any(
             b => b.Contains(atomA.Id) && b.Contains(atomB.Id)))
         {
             return false;
@@ -51,7 +51,7 @@ public sealed class BondValidator : IBondValidator
         AtomData atom,
         BondOrder newBondOrder)
     {
-        int usedValence = molecule.Bonds
+        int usedValence = molecule.Bonds.Values
             .Where(b => b.Contains(atom.Id))
             .Sum(b => (int)b.BondOrder);
 

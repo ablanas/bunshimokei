@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-
 using Bunshimokei.Core.Definitions;
 using Bunshimokei.Core.Enums;
 using Bunshimokei.Core.Events;
 using Bunshimokei.Core.Interfaces;
 using Bunshimokei.Core.ValueObjects;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 
 namespace Bunshimokei.Core.Models;
@@ -15,7 +15,8 @@ public sealed class MoleculeData
 {
     private readonly Dictionary<AtomId, AtomData> _atoms = new();
 
-    private readonly List<BondData> _bonds = new();
+    private readonly Dictionary<BondId, BondData> _bonds = new();
+
 
 
     private int _nextAtomId;
@@ -31,7 +32,7 @@ public sealed class MoleculeData
         => _atoms;
 
 
-    public IReadOnlyList<BondData> Bonds
+    public IReadOnlyDictionary<BondId, BondData> Bonds
         => _bonds;
 
 
@@ -41,6 +42,10 @@ public sealed class MoleculeData
     public event EventHandler<BondAddedEventArgs>? BondAdded;
 
     public event EventHandler<AtomMovedEventArgs>? AtomMoved;
+
+    public event EventHandler<AtomRemovedEventArgs>? AtomRemoved;
+
+    public event EventHandler<BondRemovedEventArgs>? BondRemoved;
 
 
 
@@ -141,7 +146,7 @@ public sealed class MoleculeData
 
 
 
-        _bonds.Add(bond);
+        _bonds.Add(bond.Id, bond);
 
 
 
@@ -156,20 +161,62 @@ public sealed class MoleculeData
 
 
 
-    public void RemoveAtom(
+    public bool RemoveAtom(
         AtomId id)
     {
         if (!_atoms.ContainsKey(id))
-            return;
+            return false;
 
 
+        List<BondData> removedBonds =
+            _bonds.Values
+                .Where(b => b.Contains(id))
+                .ToList();
 
-        _bonds.RemoveAll(
-            b => b.Contains(id));
 
+        foreach (BondData bond in removedBonds)
+        {
+            _bonds.Remove(bond.Id);
+
+            BondRemoved?.Invoke(
+                this,
+                new BondRemovedEventArgs(bond.Id));
+        }
 
 
         _atoms.Remove(id);
+
+
+        AtomRemoved?.Invoke(
+            this,
+            new AtomRemovedEventArgs(id));
+
+        return true;
+    }
+
+    public bool RemoveBond(
+        BondId id)
+    {
+
+
+        if (!_bonds.TryGetValue(
+            id,
+            out BondData? bond))
+        {
+            return false;
+        }
+
+
+
+        _bonds.Remove(id);
+
+
+        BondRemoved?.Invoke(
+            this,
+            new BondRemovedEventArgs(bond.Id));
+
+
+        return true;
     }
 
 

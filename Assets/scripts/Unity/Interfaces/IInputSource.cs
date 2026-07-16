@@ -1,5 +1,5 @@
 using System;
-using Bunshimokei.Unity.Input;
+using Bunshimokei.Unity.Inputs;
 
 namespace Bunshimokei.Unity.Interfaces;
 

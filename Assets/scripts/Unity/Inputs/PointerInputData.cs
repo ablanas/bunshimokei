@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Bunshimokei.Unity.Input;
+namespace Bunshimokei.Unity.Inputs;
 
 public readonly struct PointerInputData
 {

@@ -1,10 +1,11 @@
 using Bunshimokei.Core.Enums;
+using Bunshimokei.Core.Interfaces;
 using Bunshimokei.Core.Models;
 using System.Linq;
 
 namespace Bunshimokei.Core.Chemistry;
 
-public sealed class BondValidator
+public sealed class BondValidator : IBondValidator
 {
     public bool CanCreate(
         MoleculeData molecule,

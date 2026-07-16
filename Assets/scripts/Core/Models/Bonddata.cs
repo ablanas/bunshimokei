@@ -11,15 +11,19 @@ namespace Bunshimokei.Core.Models;
     /// </summary>
 public sealed class BondData
 {
+    public BondId Id { get; }
     public AtomId AtomAId { get; }
     public AtomId AtomBId { get; }
     public BondOrder BondOrder { get; }
 
     public BondData(
+        BondId id,
         AtomId atomAId, 
         AtomId atomBId, 
         BondOrder bondOrder = BondOrder.Single)
     {
+        Id = id;
+
         if (atomAId == atomBId) throw new ArgumentException("A bond must connect two different atoms.");
 
         if (atomAId < atomBId)

@@ -1,11 +1,15 @@
-using Bunshimokei.Core.Chemistry;
-using Bunshimokei.Core.Definitions;
-using Bunshimokei.Core.Enums;
-using Bunshimokei.Core.ValueObjects;
 using System;
 using System.Collections.Generic;
 
+using Bunshimokei.Core.Definitions;
+using Bunshimokei.Core.Enums;
+using Bunshimokei.Core.Events;
+using Bunshimokei.Core.Interfaces;
+using Bunshimokei.Core.ValueObjects;
+
+
 namespace Bunshimokei.Core.Models;
+
 
 public sealed class MoleculeData
 {
@@ -13,19 +17,42 @@ public sealed class MoleculeData
 
     private readonly List<BondData> _bonds = new();
 
+
     private int _nextAtomId;
 
-    private readonly BondValidator _validator;
+    private int _nextBondId;
 
 
-    public IReadOnlyDictionary<AtomId, AtomData> Atoms => _atoms;
+    private readonly IBondValidator _bondValidator;
 
-    public IReadOnlyList<BondData> Bonds => _bonds;
 
-    public MoleculeData (BondValidator validator)
+
+    public IReadOnlyDictionary<AtomId, AtomData> Atoms
+        => _atoms;
+
+
+    public IReadOnlyList<BondData> Bonds
+        => _bonds;
+
+
+
+    public event EventHandler<AtomAddedEventArgs>? AtomAdded;
+
+    public event EventHandler<BondAddedEventArgs>? BondAdded;
+
+    public event EventHandler<AtomMovedEventArgs>? AtomMoved;
+
+
+
+    public MoleculeData(
+        IBondValidator bondValidator)
     {
-        _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        _bondValidator =
+            bondValidator
+            ?? throw new ArgumentNullException(
+                nameof(bondValidator));
     }
+
 
 
     public AtomData AddAtom(
@@ -33,25 +60,46 @@ public sealed class MoleculeData
         VectorPm3D position)
     {
         if (element == null)
-            throw new ArgumentNullException(nameof(element));
+            throw new ArgumentNullException(
+                nameof(element));
 
-        var atom = new AtomData(
-            new AtomId(_nextAtomId++),
-            element,
-            position);
 
-        _atoms.Add(atom.Id, atom);
+        AtomData atom =
+            new AtomData(
+                new AtomId(_nextAtomId++),
+                element,
+                position);
+
+
+
+        _atoms.Add(
+            atom.Id,
+            atom);
+
+
+
+        AtomAdded?.Invoke(
+            this,
+            new AtomAddedEventArgs(atom));
+
+
 
         return atom;
     }
 
 
-    public AtomData? GetAtom(AtomId id)
+
+    public AtomData? GetAtom(
+        AtomId id)
     {
-        _atoms.TryGetValue(id, out var atom);
+        _atoms.TryGetValue(
+            id,
+            out AtomData? atom);
+
 
         return atom;
     }
+
 
 
     public BondData AddBond(
@@ -59,14 +107,20 @@ public sealed class MoleculeData
         AtomId atomBId,
         BondOrder order)
     {
-        AtomData atomA = GetAtom(atomAId)
-            ?? throw new ArgumentException($"Atom {atomAId} does not exist.");
+        AtomData atomA =
+            GetAtom(atomAId)
+            ?? throw new ArgumentException(
+                $"Atom {atomAId} does not exist.");
 
-        AtomData atomB = GetAtom(atomBId)
-            ?? throw new ArgumentException($"Atom {atomBId} does not exist.");
+
+        AtomData atomB =
+            GetAtom(atomBId)
+            ?? throw new ArgumentException(
+                $"Atom {atomBId} does not exist.");
 
 
-        if (!_validator.CanCreate(
+
+        if (!_bondValidator.CanCreate(
                 this,
                 atomA,
                 atomB,
@@ -77,39 +131,74 @@ public sealed class MoleculeData
         }
 
 
-        var bond = new BondData(
-            atomAId,
-            atomBId,
-            order);
+
+        BondData bond =
+            new BondData(
+                new BondId(_nextBondId++),
+                atomAId,
+                atomBId,
+                order);
+
+
 
         _bonds.Add(bond);
+
+
+
+        BondAdded?.Invoke(
+            this,
+            new BondAddedEventArgs(bond));
+
+
 
         return bond;
     }
 
 
-    public void RemoveAtom(AtomId id)
+
+    public void RemoveAtom(
+        AtomId id)
     {
         if (!_atoms.ContainsKey(id))
             return;
 
+
+
         _bonds.RemoveAll(
             b => b.Contains(id));
+
+
 
         _atoms.Remove(id);
     }
 
-    public void MoveAtom(
+
+
+    public bool MoveAtom(
         AtomId atomId,
         VectorPm3D position)
     {
-        if (!Atoms.TryGetValue(
+        if (!_atoms.TryGetValue(
                 atomId,
                 out AtomData? atom))
         {
-            return;
+            return false;
         }
 
+
+
         atom.Position = position;
+
+
+
+        AtomMoved?.Invoke(
+            this,
+            new AtomMovedEventArgs(
+                atomId,
+                position));
+
+
+
+        return true;
     }
 }

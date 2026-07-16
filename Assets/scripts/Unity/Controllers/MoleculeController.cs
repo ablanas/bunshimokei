@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using Bunshimokei.Core.Definitions;
+using Bunshimokei.Core.Enums;
 using Bunshimokei.Core.Models;
 using Bunshimokei.Core.Services;
-using Bunshimokei.Core.Definitions;
 using Bunshimokei.Core.ValueObjects;
-using Bunshimokei.Core.Chemistry;
-
-using Bunshimokei.Unity.Views;
 using Bunshimokei.Unity.Settings;
+using Bunshimokei.Unity.Views;
 
 namespace Bunshimokei.Unity.Controllers;
 
@@ -31,21 +29,27 @@ public sealed class MoleculeController : MonoBehaviour
 
     private SnapService _snapService = null!;
 
+    private BondController _bondController = null!;
 
     private readonly Dictionary<AtomId, AtomView> _views = new();
 
 
     private AtomData? _draggingAtom;
+
     private AtomData? _snapTarget;
 
 
-    private void Awake()
-    {
-        var bondValidator = new BondValidator();
-        _molecule = new MoleculeData(bondValidator);
 
-        _snapService = new SnapService(bondValidator);
+    public void Initialize(
+        MoleculeData molecule,
+        SnapService snapService,
+        BondController bondController)
+    {
+        _molecule = molecule;
+        _snapService = snapService;
+        _bondController = bondController;
     }
+
 
 
     public void AddAtom(
@@ -58,6 +62,7 @@ public sealed class MoleculeController : MonoBehaviour
                 position);
 
 
+
         AtomView view =
             Instantiate(
                 atomPrefab,
@@ -66,9 +71,11 @@ public sealed class MoleculeController : MonoBehaviour
                 atomParent);
 
 
+
         view.Initialize(
             atom,
             displaySettings);
+
 
 
         _views.Add(
@@ -77,19 +84,23 @@ public sealed class MoleculeController : MonoBehaviour
     }
 
 
-    public void BeginDrag(AtomId atomId)
+
+    public void BeginDrag(
+        AtomId atomId)
     {
         ClearHighlight();
 
         _snapTarget = null;
 
+
         if (_molecule.Atoms.TryGetValue(
-            atomId,
-            out AtomData? atom))
+                atomId,
+                out AtomData? atom))
         {
             _draggingAtom = atom;
         }
     }
+
 
 
     public void UpdateAtomPosition(
@@ -100,17 +111,23 @@ public sealed class MoleculeController : MonoBehaviour
             return;
 
 
+
         VectorPm3D position =
             ToPmPosition(
                 unityPosition);
+
 
 
         _molecule.MoveAtom(
             atomId,
             position);
 
-        _views[atomId].SetPosition(
-            unityPosition);
+
+
+        _views[atomId]
+            .SetPosition(
+                unityPosition);
+
 
 
         AtomData? target =
@@ -121,8 +138,10 @@ public sealed class MoleculeController : MonoBehaviour
                 snapDistancePm);
 
 
+
         UpdateHighlight(target);
     }
+
 
 
     public void EndDrag(
@@ -130,6 +149,7 @@ public sealed class MoleculeController : MonoBehaviour
     {
         if (_draggingAtom == null)
             return;
+
 
 
         if (_snapTarget != null)
@@ -141,9 +161,11 @@ public sealed class MoleculeController : MonoBehaviour
                     _draggingAtom.Position);
 
 
+
             _molecule.MoveAtom(
                 atomId,
                 snapped);
+
 
 
             _views[atomId]
@@ -151,16 +173,31 @@ public sealed class MoleculeController : MonoBehaviour
                     ToUnityPosition(snapped));
 
 
-            // TODO:
-            // Bond生成処理
+
+            BondData bond =
+                _molecule.AddBond(
+                    _draggingAtom.Id,
+                    _snapTarget.Id,
+                    BondOrder.Single);
+
+
+
+            _bondController.CreateBondView(
+                bond,
+                _views[_draggingAtom.Id].transform,
+                _views[_snapTarget.Id].transform);
         }
+
 
 
         ClearHighlight();
 
+
         _draggingAtom = null;
+
         _snapTarget = null;
     }
+
 
 
     private void UpdateHighlight(
@@ -168,15 +205,19 @@ public sealed class MoleculeController : MonoBehaviour
     {
         ClearHighlight();
 
+
         _snapTarget = target;
+
 
         if (target == null)
             return;
 
 
+
         _views[target.Id]
             .SetHighlight(true);
     }
+
 
 
     private void ClearHighlight()
@@ -188,6 +229,7 @@ public sealed class MoleculeController : MonoBehaviour
     }
 
 
+
     private static Vector3 ToUnityPosition(
         VectorPm3D position)
     {
@@ -196,6 +238,7 @@ public sealed class MoleculeController : MonoBehaviour
             position.Y,
             position.Z);
     }
+
 
 
     private static VectorPm3D ToPmPosition(

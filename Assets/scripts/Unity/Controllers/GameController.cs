@@ -5,6 +5,7 @@ using Bunshimokei.Core.Services;
 using Bunshimokei.Infrastructure.Modding;
 using Bunshimokei.Unity.Controllers;
 using Bunshimokei.Unity.Presenters;
+using Bunshimokei.Unity.Services;
 using System.IO;
 using UnityEngine;
 
@@ -18,10 +19,17 @@ public sealed class GameController : MonoBehaviour
     [SerializeField]
     private MoleculeInputController moleculeInputController = null!;
 
+    [SerializeField]
+    private ElementPaletteController elementPaletteController = null!;
+
+    [SerializeField]
+    private AtomPlacementController atomPlacementController = null!;
 
     public ElementDatabase Database { get; private set; } = null!;
 
     public MoleculeData Molecule { get; private set; } = null!;
+
+    private SelectedElementService _selectedElementService = null!;
 
 
     private void Awake()
@@ -59,6 +67,18 @@ public sealed class GameController : MonoBehaviour
         moleculeInputController.Initialize(
             Molecule,
             snapService);
+
+        _selectedElementService = new SelectedElementService();
+
+
+        atomPlacementController.Initialize(
+            Molecule,
+            _selectedElementService);
+
+
+        elementPaletteController.Initialize(
+            _selectedElementService,
+            Database);
 
         // ---------- Event ----------
         moleculeInputController.SnapTargetChanged +=

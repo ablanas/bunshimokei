@@ -1,252 +1,252 @@
-using System.Collections.Generic;
-using UnityEngine;
-using Bunshimokei.Core.Definitions;
-using Bunshimokei.Core.Enums;
-using Bunshimokei.Core.Models;
-using Bunshimokei.Core.Services;
-using Bunshimokei.Core.ValueObjects;
-using Bunshimokei.Unity.Settings;
-using Bunshimokei.Unity.Views;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using Bunshimokei.Core.Definitions;
+//using Bunshimokei.Core.Enums;
+//using Bunshimokei.Core.Models;
+//using Bunshimokei.Core.Services;
+//using Bunshimokei.Core.ValueObjects;
+//using Bunshimokei.Unity.Settings;
+//using Bunshimokei.Unity.Views;
 
-namespace Bunshimokei.Unity.Controllers;
+//namespace Bunshimokei.Unity.Controllers;
 
-public sealed class MoleculeController : MonoBehaviour
-{
-    [SerializeField]
-    private AtomView atomPrefab = null!;
+//public sealed class MoleculeController : MonoBehaviour
+//{
+//    [SerializeField]
+//    private AtomView atomPrefab = null!;
 
-    [SerializeField]
-    private Transform atomParent = null!;
+//    [SerializeField]
+//    private Transform atomParent = null!;
 
-    [SerializeField]
-    private MoleculeDisplaySettings displaySettings = null!;
+//    [SerializeField]
+//    private MoleculeDisplaySettings displaySettings = null!;
 
-    [SerializeField]
-    private float snapDistancePm = 200f;
+//    [SerializeField]
+//    private float snapDistancePm = 200f;
 
 
-    private MoleculeData _molecule = null!;
+//    private MoleculeData _molecule = null!;
 
-    private SnapService _snapService = null!;
+//    private SnapService _snapService = null!;
 
-    private BondController _bondController = null!;
+//    private BondController _bondController = null!;
 
-    private readonly Dictionary<AtomId, AtomView> _views = new();
+//    private readonly Dictionary<AtomId, AtomView> _views = new();
 
 
-    private AtomData? _draggingAtom;
+//    private AtomData? _draggingAtom;
 
-    private AtomData? _snapTarget;
+//    private AtomData? _snapTarget;
 
 
 
-    public void Initialize(
-        MoleculeData molecule,
-        SnapService snapService,
-        BondController bondController)
-    {
-        _molecule = molecule;
-        _snapService = snapService;
-        _bondController = bondController;
-    }
+//    public void Initialize(
+//        MoleculeData molecule,
+//        SnapService snapService,
+//        BondController bondController)
+//    {
+//        _molecule = molecule;
+//        _snapService = snapService;
+//        _bondController = bondController;
+//    }
 
 
 
-    public void AddAtom(
-        ElementDefinition element,
-        VectorPm3D position)
-    {
-        AtomData atom =
-            _molecule.AddAtom(
-                element,
-                position);
+//    public void AddAtom(
+//        ElementDefinition element,
+//        VectorPm3D position)
+//    {
+//        AtomData atom =
+//            _molecule.AddAtom(
+//                element,
+//                position);
 
 
 
-        AtomView view =
-            Instantiate(
-                atomPrefab,
-                ToUnityPosition(position),
-                Quaternion.identity,
-                atomParent);
+//        AtomView view =
+//            Instantiate(
+//                atomPrefab,
+//                ToUnityPosition(position),
+//                Quaternion.identity,
+//                atomParent);
 
 
 
-        view.Initialize(
-            atom,
-            displaySettings);
+//        view.Initialize(
+//            atom,
+//            displaySettings);
 
 
 
-        _views.Add(
-            atom.Id,
-            view);
-    }
+//        _views.Add(
+//            atom.Id,
+//            view);
+//    }
 
 
 
-    public void BeginDrag(
-        AtomId atomId)
-    {
-        ClearHighlight();
+//    public void BeginDrag(
+//        AtomId atomId)
+//    {
+//        ClearHighlight();
 
-        _snapTarget = null;
+//        _snapTarget = null;
 
 
-        if (_molecule.Atoms.TryGetValue(
-                atomId,
-                out AtomData? atom))
-        {
-            _draggingAtom = atom;
-        }
-    }
+//        if (_molecule.Atoms.TryGetValue(
+//                atomId,
+//                out AtomData? atom))
+//        {
+//            _draggingAtom = atom;
+//        }
+//    }
 
 
 
-    public void UpdateAtomPosition(
-        AtomId atomId,
-        Vector3 unityPosition)
-    {
-        if (_draggingAtom == null)
-            return;
+//    public void UpdateAtomPosition(
+//        AtomId atomId,
+//        Vector3 unityPosition)
+//    {
+//        if (_draggingAtom == null)
+//            return;
 
 
 
-        VectorPm3D position =
-            ToPmPosition(
-                unityPosition);
+//        VectorPm3D position =
+//            ToPmPosition(
+//                unityPosition);
 
 
 
-        _molecule.MoveAtom(
-            atomId,
-            position);
+//        _molecule.MoveAtom(
+//            atomId,
+//            position);
 
 
 
-        _views[atomId]
-            .SetPosition(
-                unityPosition);
+//        _views[atomId]
+//            .SetPosition(
+//                unityPosition);
 
 
 
-        AtomData? target =
-            _snapService.FindSnapTarget(
-                _molecule,
-                _draggingAtom,
-                position,
-                snapDistancePm);
+//        AtomData? target =
+//            _snapService.FindSnapTarget(
+//                _molecule,
+//                _draggingAtom,
+//                position,
+//                snapDistancePm);
 
 
 
-        UpdateHighlight(target);
-    }
+//        UpdateHighlight(target);
+//    }
 
 
 
-    public void EndDrag(
-        AtomId atomId)
-    {
-        if (_draggingAtom == null)
-            return;
+//    public void EndDrag(
+//        AtomId atomId)
+//    {
+//        if (_draggingAtom == null)
+//            return;
 
 
 
-        if (_snapTarget != null)
-        {
-            VectorPm3D snapped =
-                _snapService.CalculateSnapPosition(
-                    _draggingAtom,
-                    _snapTarget,
-                    _draggingAtom.Position);
+//        if (_snapTarget != null)
+//        {
+//            VectorPm3D snapped =
+//                _snapService.CalculateSnapPosition(
+//                    _draggingAtom,
+//                    _snapTarget,
+//                    _draggingAtom.Position);
 
 
 
-            _molecule.MoveAtom(
-                atomId,
-                snapped);
+//            _molecule.MoveAtom(
+//                atomId,
+//                snapped);
 
 
 
-            _views[atomId]
-                .SetPosition(
-                    ToUnityPosition(snapped));
+//            _views[atomId]
+//                .SetPosition(
+//                    ToUnityPosition(snapped));
 
 
 
-            BondData bond =
-                _molecule.AddBond(
-                    _draggingAtom.Id,
-                    _snapTarget.Id,
-                    BondOrder.Single);
+//            BondData bond =
+//                _molecule.AddBond(
+//                    _draggingAtom.Id,
+//                    _snapTarget.Id,
+//                    BondOrder.Single);
 
 
 
-            _bondController.CreateBondView(
-                bond,
-                _views[_draggingAtom.Id].transform,
-                _views[_snapTarget.Id].transform);
-        }
+//            _bondController.CreateBondView(
+//                bond,
+//                _views[_draggingAtom.Id].transform,
+//                _views[_snapTarget.Id].transform);
+//        }
 
 
 
-        ClearHighlight();
+//        ClearHighlight();
 
 
-        _draggingAtom = null;
+//        _draggingAtom = null;
 
-        _snapTarget = null;
-    }
+//        _snapTarget = null;
+//    }
 
 
 
-    private void UpdateHighlight(
-        AtomData? target)
-    {
-        ClearHighlight();
+//    private void UpdateHighlight(
+//        AtomData? target)
+//    {
+//        ClearHighlight();
 
 
-        _snapTarget = target;
+//        _snapTarget = target;
 
 
-        if (target == null)
-            return;
+//        if (target == null)
+//            return;
 
 
 
-        _views[target.Id]
-            .SetHighlight(true);
-    }
+//        _views[target.Id]
+//            .SetHighlight(true);
+//    }
 
 
 
-    private void ClearHighlight()
-    {
-        foreach (AtomView view in _views.Values)
-        {
-            view.SetHighlight(false);
-        }
-    }
+//    private void ClearHighlight()
+//    {
+//        foreach (AtomView view in _views.Values)
+//        {
+//            view.SetHighlight(false);
+//        }
+//    }
 
 
 
-    private static Vector3 ToUnityPosition(
-        VectorPm3D position)
-    {
-        return new Vector3(
-            position.X,
-            position.Y,
-            position.Z);
-    }
+//    private static Vector3 ToUnityPosition(
+//        VectorPm3D position)
+//    {
+//        return new Vector3(
+//            position.X,
+//            position.Y,
+//            position.Z);
+//    }
 
 
 
-    private static VectorPm3D ToPmPosition(
-        Vector3 position)
-    {
-        return new VectorPm3D(
-            position.x,
-            position.y,
-            position.z);
-    }
-}
+//    private static VectorPm3D ToPmPosition(
+//        Vector3 position)
+//    {
+//        return new VectorPm3D(
+//            position.x,
+//            position.y,
+//            position.z);
+//    }
+//}

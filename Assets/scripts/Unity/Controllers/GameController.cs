@@ -1,12 +1,12 @@
-using UnityEngine;
-
 using Bunshimokei.Core.Chemistry;
 using Bunshimokei.Core.Interfaces;
 using Bunshimokei.Core.Models;
 using Bunshimokei.Core.Services;
-
+using Bunshimokei.Infrastructure.Modding;
 using Bunshimokei.Unity.Controllers;
 using Bunshimokei.Unity.Presenters;
+using System.IO;
+using UnityEngine;
 
 namespace Bunshimokei.Unity;
 
@@ -19,32 +19,48 @@ public sealed class GameController : MonoBehaviour
     private MoleculeInputController moleculeInputController = null!;
 
 
-    private MoleculeData _molecule = null!;
+    public ElementDatabase Database { get; private set; } = null!;
+
+    public MoleculeData Molecule { get; private set; } = null!;
 
 
     private void Awake()
     {
-        // Core生成
-        IBondValidator bondValidator =
+        // ---------- Mod ----------
+        Database = new ElementDatabase();
+
+        ModManager modManager =
+            new ModManager();
+
+        modManager.LoadMods(
+            new[]
+            {
+            Path.Combine(
+                Application.streamingAssetsPath,
+                "Mods",
+                "Vanilla")
+            },
+            Database);
+
+        // ---------- Core ----------
+        IBondValidator validator =
             new BondValidator();
 
         SnapService snapService =
-            new SnapService(bondValidator);
+            new SnapService(validator);
 
-        _molecule =
-            new MoleculeData(bondValidator);
+        Molecule =
+            new MoleculeData(validator);
 
-
-        // Unity層へ注入
+        // ---------- Unity ----------
         moleculePresenter.Initialize(
-            _molecule);
+            Molecule);
 
         moleculeInputController.Initialize(
-            _molecule,
+            Molecule,
             snapService);
 
-
-        // Controller → Presenter
+        // ---------- Event ----------
         moleculeInputController.SnapTargetChanged +=
             moleculePresenter.SetHighlight;
     }

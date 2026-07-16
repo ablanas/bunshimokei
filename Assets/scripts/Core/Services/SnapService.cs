@@ -1,6 +1,7 @@
-using Bunshimokei.Core.Chemistry;
+using Bunshimokei.Core.Interfaces;
 using Bunshimokei.Core.Models;
 using Bunshimokei.Core.ValueObjects;
+using Bunshimokei.Core.Enums;
 using System;
 
 namespace Bunshimokei.Core.Services;
@@ -12,10 +13,10 @@ namespace Bunshimokei.Core.Services;
 /// </summary>
 public sealed class SnapService
 {
-    private readonly BondValidator _bondValidator;
+    private readonly IBondValidator _bondValidator;
 
     public SnapService(
-        BondValidator bondValidator)
+        IBondValidator bondValidator)
     {
         _bondValidator = bondValidator;
     }
@@ -37,7 +38,8 @@ public sealed class SnapService
             if (!_bondValidator.CanCreate(
                     molecule,
                     draggedAtom,
-                    atom))
+                    atom,
+                    BondOrder.Single))
             {
                 continue;
             }

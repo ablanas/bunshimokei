@@ -45,6 +45,8 @@ public sealed class MoleculePresenter : MonoBehaviour
 
     private readonly List<BondData> _pendingBonds = new();
 
+    private AtomId? _highlightedAtom;
+
 
     private bool _initialized;
 
@@ -141,6 +143,11 @@ public sealed class MoleculePresenter : MonoBehaviour
         object? sender,
         AtomRemovedEventArgs e)
     {
+        if (_highlightedAtom == e.AtomId)
+        {
+            _highlightedAtom = null;
+        }
+
         if (!_atomViews.TryGetValue(
                 e.AtomId,
                 out AtomView? view))
@@ -283,6 +290,34 @@ public sealed class MoleculePresenter : MonoBehaviour
             {
                 _pendingBonds.Remove(bond);
             }
+        }
+    }
+
+
+    public void SetHighlight(
+        AtomId? atomId)
+    {
+        if (_highlightedAtom != null &&
+            _atomViews.TryGetValue(
+                _highlightedAtom.Value,
+                out AtomView? previous))
+        {
+            previous.SetHighlight(false);
+        }
+
+        if (_highlightedAtom == atomId)
+        {
+            return;
+        }
+
+        _highlightedAtom = atomId;
+
+        if (atomId != null &&
+            _atomViews.TryGetValue(
+                atomId.Value,
+                out AtomView? current))
+        {
+            current.SetHighlight(true);
         }
     }
 

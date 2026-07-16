@@ -1,13 +1,13 @@
 using System;
-using UnityEngine.EventSystems;
+using Bunshimokei.Unity.Input;
 
 namespace Bunshimokei.Unity.Interfaces;
 
 public interface IInputSource
 {
-    event Action<PointerEventData> PointerDown;
+    event Action<PointerInputData> PointerDown;
 
-    event Action<PointerEventData> PointerMove;
+    event Action<PointerInputData> PointerMove;
 
-    event Action<PointerEventData> PointerUp;
+    event Action<PointerInputData> PointerUp;
 }

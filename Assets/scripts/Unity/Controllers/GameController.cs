@@ -9,87 +9,96 @@ using Bunshimokei.Unity.Services;
 using System.IO;
 using UnityEngine;
 
-namespace Bunshimokei.Unity;
-
-public sealed class GameController : MonoBehaviour
+namespace Bunshimokei.Unity
 {
-    [SerializeField]
-    private MoleculePresenter moleculePresenter = null!;
 
-    [SerializeField]
-    private MoleculeInputController moleculeInputController = null!;
-
-    [SerializeField]
-    private ElementPaletteController elementPaletteController = null!;
-
-    [SerializeField]
-    private AtomPlacementController atomPlacementController = null!;
-
-    public ElementDatabase Database { get; private set; } = null!;
-
-    public MoleculeData Molecule { get; private set; } = null!;
-
-    private SelectedElementService _selectedElementService = null!;
-
-
-    private void Awake()
+    public sealed class GameController : MonoBehaviour
     {
-        // ---------- Mod ----------
-        Database = new ElementDatabase();
+        [SerializeField]
+        private MoleculePresenter moleculePresenter = null!;
 
-        ModManager modManager =
-            new ModManager();
+        [SerializeField]
+        private MoleculeInputController moleculeInputController = null!;
 
-        modManager.LoadMods(
-            new[]
-            {
+        [SerializeField]
+        private ElementPaletteController elementPaletteController = null!;
+
+        [SerializeField]
+        private AtomPlacementController atomPlacementController = null!;
+
+        [SerializeField]
+        private ElementPalettePresenter elementPalettePresenter = null!;
+
+        public ElementDatabase Database { get; private set; } = null!;
+
+        public MoleculeData Molecule { get; private set; } = null!;
+
+        private SelectedElementService _selectedElementService = null!;
+
+
+        private void Awake()
+        {
+            // ---------- Mod ----------
+            Database = new ElementDatabase();
+
+            ModManager modManager =
+                new ModManager();
+
+            modManager.LoadMods(
+                new[]
+                {
             Path.Combine(
                 Application.streamingAssetsPath,
                 "Mods",
                 "Vanilla")
-            },
-            Database);
+                },
+                Database);
 
-        // ---------- Core ----------
-        IBondValidator validator =
-            new BondValidator();
+            // ---------- Core ----------
+            IBondValidator validator =
+                new BondValidator();
 
-        SnapService snapService =
-            new SnapService(validator);
+            SnapService snapService =
+                new SnapService(validator);
 
-        Molecule =
-            new MoleculeData(validator);
+            Molecule =
+                new MoleculeData(validator);
 
-        // ---------- Unity ----------
-        moleculePresenter.Initialize(
-            Molecule);
+            // ---------- Unity ----------
+            moleculePresenter.Initialize(
+                Molecule);
 
-        moleculeInputController.Initialize(
-            Molecule,
-            snapService);
+            moleculeInputController.Initialize(
+                Molecule,
+                snapService);
 
-        _selectedElementService = new SelectedElementService();
-
-
-        atomPlacementController.Initialize(
-            Molecule,
-            _selectedElementService);
+            _selectedElementService = new SelectedElementService();
 
 
-        elementPaletteController.Initialize(
-            _selectedElementService,
-            Database);
+            atomPlacementController.Initialize(
+                Molecule,
+                _selectedElementService);
 
-        // ---------- Event ----------
-        moleculeInputController.SnapTargetChanged +=
-            moleculePresenter.SetHighlight;
+
+            elementPaletteController.Initialize(
+                _selectedElementService,
+                Database);
+
+            elementPalettePresenter.Initialize(
+                Database,
+                elementPaletteController);
+
+            // ---------- Event ----------
+            moleculeInputController.SnapTargetChanged +=
+                moleculePresenter.SetHighlight;
+        }
+
+
+        private void OnDestroy()
+        {
+            moleculeInputController.SnapTargetChanged -=
+                moleculePresenter.SetHighlight;
+        }
+
     }
-
-
-    private void OnDestroy()
-    {
-        moleculeInputController.SnapTargetChanged -=
-            moleculePresenter.SetHighlight;
-    }
-
 }

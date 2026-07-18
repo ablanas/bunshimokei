@@ -7,62 +7,64 @@ using Bunshimokei.Core.ValueObjects;
 using Bunshimokei.Unity.Views;
 
 
-namespace Bunshimokei.Unity.Controllers;
-
-
-public sealed class BondController : MonoBehaviour
+namespace Bunshimokei.Unity.Controllers
 {
-    [SerializeField]
-    private BondView bondPrefab = null!;
 
 
-    [SerializeField]
-    private Transform bondParent = null!;
-
-
-    private readonly Dictionary<BondId, BondView> _views = new();
-
-
-    public void CreateBondView(
-        BondData bond,
-        Transform atomA,
-        Transform atomB)
+    public sealed class BondController : MonoBehaviour
     {
-        if (_views.ContainsKey(bond.Id))
-            return;
+        [SerializeField]
+        private BondView bondPrefab = null!;
 
 
-        BondView view =
-            Instantiate(
-                bondPrefab,
-                bondParent);
+        [SerializeField]
+        private Transform bondParent = null!;
 
 
-        view.Initialize(
-            atomA,
-            atomB,
-            bond.BondOrder);
+        private readonly Dictionary<BondId, BondView> _views = new();
 
 
-        _views.Add(
-            bond.Id,
-            view);
-    }
-
-
-    public void RemoveBondView(
-        BondId bondId)
-    {
-        if (!_views.TryGetValue(
-                bondId,
-                out BondView? view))
+        public void CreateBondView(
+            BondData bond,
+            Transform atomA,
+            Transform atomB)
         {
-            return;
+            if (_views.ContainsKey(bond.Id))
+                return;
+
+
+            BondView view =
+                Instantiate(
+                    bondPrefab,
+                    bondParent);
+
+
+            view.Initialize(
+                atomA,
+                atomB,
+                bond.BondOrder);
+
+
+            _views.Add(
+                bond.Id,
+                view);
         }
 
 
-        Destroy(view.gameObject);
+        public void RemoveBondView(
+            BondId bondId)
+        {
+            if (!_views.TryGetValue(
+                    bondId,
+                    out BondView? view))
+            {
+                return;
+            }
 
-        _views.Remove(bondId);
+
+            Destroy(view.gameObject);
+
+            _views.Remove(bondId);
+        }
     }
 }

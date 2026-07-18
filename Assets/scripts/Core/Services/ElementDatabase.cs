@@ -9,6 +9,9 @@ public sealed class ElementDatabase
 {
     private readonly Dictionary<ElementSymbol, ElementDefinition> _elements = new();
 
+    public IEnumerable<ElementDefinition> Elements
+        => _elements.Values;
+
     public void Add(ElementDefinition definition)
     {
         if (definition == null) throw new ArgumentNullException(nameof(definition));

@@ -2,72 +2,74 @@ using UnityEngine;
 
 using Bunshimokei.Core.Enums;
 
-namespace Bunshimokei.Unity.Views;
-
-public sealed class BondView : MonoBehaviour
+namespace Bunshimokei.Unity.Views
 {
-    private Transform _atomA = null!;
-    private Transform _atomB = null!;
 
-
-    [SerializeField]
-    private Transform stick = null!;
-
-
-    private BondOrder _order;
-
-
-    public void Initialize(
-        Transform atomA,
-        Transform atomB,
-        BondOrder order)
+    public sealed class BondView : MonoBehaviour
     {
-        _atomA = atomA;
-        _atomB = atomB;
-        _order = order;
-
-        UpdateTransform();
-    }
+        private Transform _atomA = null!;
+        private Transform _atomB = null!;
 
 
-    private void Update()
-    {
-        UpdateTransform();
-    }
+        [SerializeField]
+        private Transform stick = null!;
 
 
-    private void UpdateTransform()
-    {
-        if (_atomA == null || _atomB == null)
-            return;
+        private BondOrder _order;
 
 
-        Vector3 direction =
-            _atomB.position - _atomA.position;
+        public void Initialize(
+            Transform atomA,
+            Transform atomB,
+            BondOrder order)
+        {
+            _atomA = atomA;
+            _atomB = atomB;
+            _order = order;
+
+            UpdateTransform();
+        }
 
 
-        float distance =
-            direction.magnitude;
+        private void Update()
+        {
+            UpdateTransform();
+        }
 
 
-        if (distance == 0f)
-            return;
+        private void UpdateTransform()
+        {
+            if (_atomA == null || _atomB == null)
+                return;
 
 
-        transform.position =
-            (_atomA.position + _atomB.position) * 0.5f;
+            Vector3 direction =
+                _atomB.position - _atomA.position;
 
 
-        transform.rotation =
-            Quaternion.FromToRotation(
-                Vector3.up,
-                direction);
+            float distance =
+                direction.magnitude;
 
 
-        stick.localScale =
-            new Vector3(
-                1f,
-                distance / 2f,
-                1f);
+            if (distance == 0f)
+                return;
+
+
+            transform.position =
+                (_atomA.position + _atomB.position) * 0.5f;
+
+
+            transform.rotation =
+                Quaternion.FromToRotation(
+                    Vector3.up,
+                    direction);
+
+
+            stick.localScale =
+                new Vector3(
+                    1f,
+                    distance / 2f,
+                    1f);
+        }
     }
 }

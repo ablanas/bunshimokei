@@ -5,50 +5,52 @@ using Bunshimokei.Core.Services;
 using Bunshimokei.Core.ValueObjects;
 using Bunshimokei.Unity.Services;
 
-namespace Bunshimokei.Unity.Controllers;
-
-public sealed class ElementPaletteController : MonoBehaviour
+namespace Bunshimokei.Unity.Controllers
 {
-    private SelectedElementService _selectedElementService = null!;
 
-    private ElementDatabase _database = null!;
-
-
-    public void Initialize(
-        SelectedElementService selectedElementService,
-        ElementDatabase database)
+    public sealed class ElementPaletteController : MonoBehaviour
     {
-        _selectedElementService = selectedElementService;
-        _database = database;
-    }
+        private SelectedElementService _selectedElementService = null!;
+
+        private ElementDatabase _database = null!;
 
 
-    public void SelectElement(
-        string symbol)
-    {
-        ElementSymbol elementSymbol =
-            new ElementSymbol(symbol);
-
-
-        ElementDefinition? element =
-            _database.Get(elementSymbol);
-
-
-        if (element == null)
+        public void Initialize(
+            SelectedElementService selectedElementService,
+            ElementDatabase database)
         {
-            Debug.LogWarning(
-                $"Element '{symbol}' not found.");
-            return;
+            _selectedElementService = selectedElementService;
+            _database = database;
         }
 
 
-        _selectedElementService.Select(
-            element);
-    }
+        public void SelectElement(
+            string symbol)
+        {
+            ElementSymbol elementSymbol =
+                new ElementSymbol(symbol);
 
 
-    public void ClearSelection()
-    {
-        _selectedElementService.Clear();
+            ElementDefinition? element =
+                _database.Get(elementSymbol);
+
+
+            if (element == null)
+            {
+                Debug.LogWarning(
+                    $"Element '{symbol}' not found.");
+                return;
+            }
+
+
+            _selectedElementService.Select(
+                element);
+        }
+
+
+        public void ClearSelection()
+        {
+            _selectedElementService.Clear();
+        }
     }
 }

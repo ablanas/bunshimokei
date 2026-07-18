@@ -5,50 +5,52 @@ using Bunshimokei.Core.Models;
 using Bunshimokei.Core.ValueObjects;
 using Bunshimokei.Unity.Services;
 
-namespace Bunshimokei.Unity.Controllers;
-
-public sealed class AtomPlacementController : MonoBehaviour
+namespace Bunshimokei.Unity.Controllers
 {
-    private MoleculeData _molecule = null!;
 
-    private SelectedElementService _selectedElementService = null!;
-
-
-    public void Initialize(
-        MoleculeData molecule,
-        SelectedElementService selectedElementService)
+    public sealed class AtomPlacementController : MonoBehaviour
     {
-        _molecule = molecule;
-        _selectedElementService = selectedElementService;
-    }
+        private MoleculeData _molecule = null!;
+
+        private SelectedElementService _selectedElementService = null!;
 
 
-    public bool PlaceAtom(
-        Vector3 worldPosition)
-    {
-        ElementDefinition? element =
-            _selectedElementService.SelectedElement;
-
-        if (element == null)
+        public void Initialize(
+            MoleculeData molecule,
+            SelectedElementService selectedElementService)
         {
-            return false;
+            _molecule = molecule;
+            _selectedElementService = selectedElementService;
         }
 
 
-        _molecule.AddAtom(
-            element,
-            ToPmPosition(worldPosition));
+        public bool PlaceAtom(
+            Vector3 worldPosition)
+        {
+            ElementDefinition? element =
+                _selectedElementService.SelectedElement;
 
-        return true;
-    }
+            if (element == null)
+            {
+                return false;
+            }
 
 
-    private static VectorPm3D ToPmPosition(
-        Vector3 position)
-    {
-        return new VectorPm3D(
-            position.x,
-            position.y,
-            position.z);
+            _molecule.AddAtom(
+                element,
+                ToPmPosition(worldPosition));
+
+            return true;
+        }
+
+
+        private static VectorPm3D ToPmPosition(
+            Vector3 position)
+        {
+            return new VectorPm3D(
+                position.x,
+                position.y,
+                position.z);
+        }
     }
 }

@@ -3,98 +3,100 @@ using Bunshimokei.Core.Models;
 using Bunshimokei.Core.ValueObjects;
 using Bunshimokei.Unity.Settings;
 
-namespace Bunshimokei.Unity.Views;
-
-[RequireComponent(typeof(SphereCollider))]
-public sealed class AtomView : MonoBehaviour
+namespace Bunshimokei.Unity.Views
 {
-    public AtomData Data { get; private set; } = null!;
 
-
-    private Renderer _renderer = null!;
-    private MaterialPropertyBlock _propertyBlock = null!;
-
-    private Color _baseColor;
-
-
-    private void Awake()
+    [RequireComponent(typeof(SphereCollider))]
+    public sealed class AtomView : MonoBehaviour
     {
-        _renderer = GetComponentInChildren<Renderer>();
+        public AtomData Data { get; private set; } = null!;
 
-        if (_renderer == null)
+
+        private Renderer _renderer = null!;
+        private MaterialPropertyBlock _propertyBlock = null!;
+
+        private Color _baseColor;
+
+
+        private void Awake()
         {
-            throw new MissingComponentException(
-                $"{nameof(AtomView)} requires a child Renderer.");
+            _renderer = GetComponentInChildren<Renderer>();
+
+            if (_renderer == null)
+            {
+                throw new MissingComponentException(
+                    $"{nameof(AtomView)} requires a child Renderer.");
+            }
+
+            _propertyBlock = new MaterialPropertyBlock();
         }
 
-        _propertyBlock = new MaterialPropertyBlock();
-    }
+
+        public void Initialize(
+            AtomData atomData,
+            MoleculeDisplaySettings settings)
+        {
+            Data = atomData;
 
 
-    public void Initialize(
-        AtomData atomData,
-        MoleculeDisplaySettings settings)
-    {
-        Data = atomData;
 
-        
+            RefreshAppearance(settings);
+        }
 
-        RefreshAppearance(settings);
-    }
+        public void RefreshAppearance(
+            MoleculeDisplaySettings settings)
+        {
+            _baseColor = ToUnityColor(Data.Element.Color);
 
-    public void RefreshAppearance(
-        MoleculeDisplaySettings settings)
-    {
-        _baseColor = ToUnityColor(Data.Element.Color);
+            SetColor(_baseColor);
 
-        SetColor(_baseColor);
+            float radius =
+                settings.ConvertPmToUnity(
+                    Data.Element.VanDerWaalsRadiusPm)
+                * settings.AtomRadiusScale;
 
-        float radius =
-            settings.ConvertPmToUnity(
-                Data.Element.VanDerWaalsRadiusPm)
-            * settings.AtomRadiusScale;
-
-        transform.localScale =
-            2f * radius * Vector3.one;
-    }
+            transform.localScale =
+                2f * radius * Vector3.one;
+        }
 
 
-    public void SetPosition(Vector3 position)
-    {
-        transform.position = position;
-    }
+        public void SetPosition(Vector3 position)
+        {
+            transform.position = position;
+        }
 
 
-    public void SetHighlight(bool enabled)
-    {
-        SetColor(
-            enabled
-                ? Color.yellow
-                : _baseColor);
-    }
+        public void SetHighlight(bool enabled)
+        {
+            SetColor(
+                enabled
+                    ? Color.yellow
+                    : _baseColor);
+        }
 
 
-    private void SetColor(Color color)
-    {
-        _renderer.GetPropertyBlock(
-            _propertyBlock);
+        private void SetColor(Color color)
+        {
+            _renderer.GetPropertyBlock(
+                _propertyBlock);
 
-        _propertyBlock.SetColor(
-            "_Color",
-            color);
+            _propertyBlock.SetColor(
+                "_Color",
+                color);
 
-        _renderer.SetPropertyBlock(
-            _propertyBlock);
-    }
+            _renderer.SetPropertyBlock(
+                _propertyBlock);
+        }
 
 
-    private static Color ToUnityColor(
-        ColorRGBA color)
-    {
-        return new Color(
-            color.R,
-            color.G,
-            color.B,
-            color.A);
+        private static Color ToUnityColor(
+            ColorRGBA color)
+        {
+            return new Color(
+                color.R,
+                color.G,
+                color.B,
+                color.A);
+        }
     }
 }

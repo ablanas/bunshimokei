@@ -1,76 +1,78 @@
 using Bunshimokei.Unity.Interfaces;
 using UnityEngine;
 
-namespace Bunshimokei.Unity.Inputs;
-
-public sealed class MouseInputSource :
-    MonoBehaviour,
-    IInputSource
+namespace Bunshimokei.Unity.Inputs
 {
-    [SerializeField]
-    private Camera targetCamera = null!;
 
-
-    public event System.Action<PointerInputData>? PointerDown;
-
-    public event System.Action<PointerInputData>? PointerMove;
-
-    public event System.Action<PointerInputData>? PointerUp;
-
-    private const float DefaultDistance = 5f;
-
-
-    private void Awake()
+    public sealed class MouseInputSource :
+        MonoBehaviour,
+        IInputSource
     {
-        targetCamera ??= Camera.main;
+        [SerializeField]
+        private Camera targetCamera = null!;
 
-        if (targetCamera == null)
+
+        public event System.Action<PointerInputData>? PointerDown;
+
+        public event System.Action<PointerInputData>? PointerMove;
+
+        public event System.Action<PointerInputData>? PointerUp;
+
+        private const float DefaultDistance = 5f;
+
+
+        private void Awake()
         {
-            throw new MissingReferenceException(
-                "Target Camera is not assigned.");
+            targetCamera ??= Camera.main;
+
+            if (targetCamera == null)
+            {
+                throw new MissingReferenceException(
+                    "Target Camera is not assigned.");
+            }
         }
-    }
 
 
-    private void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+        private void Update()
         {
-            PointerDown?.Invoke(
-                CreatePointerData());
+            if (Input.GetMouseButtonDown(0))
+            {
+                PointerDown?.Invoke(
+                    CreatePointerData());
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                PointerMove?.Invoke(
+                    CreatePointerData());
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                PointerUp?.Invoke(
+                    CreatePointerData());
+            }
         }
 
-        if (Input.GetMouseButton(0))
+
+        private PointerInputData CreatePointerData()
         {
-            PointerMove?.Invoke(
-                CreatePointerData());
-        }
+            Ray ray =
+                targetCamera.ScreenPointToRay(
+                    Input.mousePosition);
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            PointerUp?.Invoke(
-                CreatePointerData());
-        }
-    }
+            if (Physics.Raycast(
+                    ray,
+                    out RaycastHit hit))
+            {
+                return new PointerInputData(
+                    hit.point,
+                    hit.collider.gameObject);
+            }
 
-
-    private PointerInputData CreatePointerData()
-    {
-        Ray ray =
-            targetCamera.ScreenPointToRay(
-                Input.mousePosition);
-
-        if (Physics.Raycast(
-                ray,
-                out RaycastHit hit))
-        {
             return new PointerInputData(
-                hit.point,
-                hit.collider.gameObject);
+                ray.GetPoint(DefaultDistance),
+                null);
         }
-
-        return new PointerInputData(
-            ray.GetPoint(DefaultDistance),
-            null);
     }
 }

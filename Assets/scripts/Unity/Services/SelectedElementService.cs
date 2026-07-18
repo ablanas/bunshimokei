@@ -1,23 +1,25 @@
 using Bunshimokei.Core.Definitions;
 
-namespace Bunshimokei.Unity.Services;
-
-public sealed class SelectedElementService
+namespace Bunshimokei.Unity.Services
 {
-    public ElementDefinition? SelectedElement
-    {
-        get;
-        private set;
-    }
 
-    public void Select(
-        ElementDefinition element)
+    public sealed class SelectedElementService
     {
-        SelectedElement = element;
-    }
+        public ElementDefinition? SelectedElement
+        {
+            get;
+            private set;
+        }
 
-    public void Clear()
-    {
-        SelectedElement = null;
+        public void Select(
+            ElementDefinition element)
+        {
+            SelectedElement = element;
+        }
+
+        public void Clear()
+        {
+            SelectedElement = null;
+        }
     }
 }

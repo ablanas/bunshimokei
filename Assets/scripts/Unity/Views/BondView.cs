@@ -10,6 +10,8 @@ namespace Bunshimokei.Unity.Views
         private Transform _atomA = null!;
         private Transform _atomB = null!;
 
+        private float _bondRadius;
+
 
         [SerializeField]
         private Transform stick = null!;
@@ -21,11 +23,13 @@ namespace Bunshimokei.Unity.Views
         public void Initialize(
             Transform atomA,
             Transform atomB,
-            BondOrder order)
+            BondOrder order,
+            float bondRadius)
         {
             _atomA = atomA;
             _atomB = atomB;
             _order = order;
+            _bondRadius = bondRadius;
 
             UpdateTransform();
         }
@@ -67,9 +71,9 @@ namespace Bunshimokei.Unity.Views
 
             stick.localScale =
                 new Vector3(
-                    1f,
+                    _bondRadius,
                     distance / 2f,
-                    1f);
+                    _bondRadius);
         }
     }
 }

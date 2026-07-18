@@ -25,18 +25,12 @@ namespace Bunshimokei.Unity.Controllers
 
         private bool _isDragging;
 
-
-        private void Awake()
-        {
-            _inputSource =
-                inputSourceBehaviour as IInputSource
-                ?? throw new MissingReferenceException(
-                    $"{nameof(inputSourceBehaviour)} must implement {nameof(IInputSource)}.");
-        }
-
-
         private void OnEnable()
         {
+            _inputSource ??=
+                    inputSourceBehaviour as IInputSource
+                    ?? throw new MissingReferenceException(
+                        $"{nameof(inputSourceBehaviour)} must implement {nameof(IInputSource)}.");
             _inputSource.PointerDown += OnPointerDown;
             _inputSource.PointerMove += OnPointerMove;
             _inputSource.PointerUp += OnPointerUp;
@@ -89,8 +83,15 @@ namespace Bunshimokei.Unity.Controllers
                 return;
 
 
+            Vector3 position =
+                ((MouseInputSource)inputSourceBehaviour)
+                .GetWorldPositionAtDistance(
+                    _dragDistance);
+            // Debug.Log(position);
+
+
             moleculeInputController.UpdateDrag(
-                data.WorldPosition);
+                position);
         }
 
 

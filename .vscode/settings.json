@@ -67,5 +67,11 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "bunshimokei.slnx"
+    "dotnet.defaultSolution": "bunshimokei.slnx",
+    "cSpell.words": [
+        "Behaviour",
+        "Bunshimokei",
+        "Scriptable",
+        "Waals"
+    ]
 }

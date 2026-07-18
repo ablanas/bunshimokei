@@ -16,7 +16,7 @@ public sealed class MoleculeDisplaySettings : ScriptableObject
 
     [Header("Bond")]
     [Min(0.001f)]
-    public float BondRadius = 0.02f;
+    public float BondRadiusPm = 20f;
 
     public float ConvertPmToUnity(float pm)
     {
@@ -26,5 +26,10 @@ public sealed class MoleculeDisplaySettings : ScriptableObject
     public float ConvertUnityToPm(float unity)
     {
         return unity / PmToUnityScale;
+    }
+
+    public float GetBondRadiusUnity()
+    {
+        return ConvertPmToUnity(BondRadiusPm);
     }
 }

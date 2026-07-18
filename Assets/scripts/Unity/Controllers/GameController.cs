@@ -76,7 +76,8 @@ namespace Bunshimokei.Unity
             moleculeInputController.Initialize(
                 Molecule,
                 snapService,
-                atomPlacementController);
+                atomPlacementController,
+                displaySettings);
 
             _selectedElementService = new SelectedElementService();
 

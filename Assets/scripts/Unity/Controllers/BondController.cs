@@ -5,6 +5,7 @@ using Bunshimokei.Core.Models;
 using Bunshimokei.Core.ValueObjects;
 
 using Bunshimokei.Unity.Views;
+using Bunshimokei.Unity.Settings;
 
 
 namespace Bunshimokei.Unity.Controllers
@@ -19,6 +20,9 @@ namespace Bunshimokei.Unity.Controllers
 
         [SerializeField]
         private Transform bondParent = null!;
+
+        [SerializeField]
+        private MoleculeDisplaySettings displaySettings = null!;
 
 
         private readonly Dictionary<BondId, BondView> _views = new();
@@ -42,7 +46,8 @@ namespace Bunshimokei.Unity.Controllers
             view.Initialize(
                 atomA,
                 atomB,
-                bond.BondOrder);
+                bond.BondOrder,
+                displaySettings.GetBondRadiusUnity());
 
 
             _views.Add(

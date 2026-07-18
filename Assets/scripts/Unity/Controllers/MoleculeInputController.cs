@@ -5,6 +5,7 @@ using Bunshimokei.Core.Enums;
 using Bunshimokei.Core.Models;
 using Bunshimokei.Core.Services;
 using Bunshimokei.Core.ValueObjects;
+using Bunshimokei.Unity.Settings;
 
 namespace Bunshimokei.Unity.Controllers
 {
@@ -29,15 +30,19 @@ namespace Bunshimokei.Unity.Controllers
 
         private AtomPlacementController _atomPlacementController = null!;
 
+        private  MoleculeDisplaySettings _displaySettings = null!;
+
 
         public void Initialize(
             MoleculeData molecule,
             SnapService snapService,
-            AtomPlacementController atomPlacementController)
+            AtomPlacementController atomPlacementController,
+            MoleculeDisplaySettings displaySettings)
         {
             _molecule = molecule;
             _snapService = snapService;
             _atomPlacementController = atomPlacementController;
+            _displaySettings = displaySettings;
         }
 
 
@@ -77,6 +82,9 @@ namespace Bunshimokei.Unity.Controllers
                     _draggingAtom,
                     position,
                     snapDistancePm);
+
+            Debug.Log(
+                $"MoleculeInput Position: {unityPosition}");
 
 
             SetSnapTarget(target);
@@ -143,13 +151,13 @@ namespace Bunshimokei.Unity.Controllers
         }
 
 
-        private static VectorPm3D ToPmPosition(
+        private VectorPm3D ToPmPosition(
             Vector3 position)
         {
             return new VectorPm3D(
-                position.x,
-                position.y,
-                position.z);
+                _displaySettings.ConvertUnityToPm(position.x),
+                _displaySettings.ConvertUnityToPm(position.y),
+                _displaySettings.ConvertUnityToPm(position.z));
         }
     }
 }

@@ -126,6 +126,8 @@ namespace Bunshimokei.Unity.Presenters
             object? sender,
             AtomMovedEventArgs e)
         {
+            Debug.Log(
+                $"AtomMoved: {e.Position.X}, {e.Position.Y}, {e.Position.Z}");
             if (!_atomViews.TryGetValue(
                     e.AtomId,
                     out AtomView? view))
@@ -133,9 +135,14 @@ namespace Bunshimokei.Unity.Presenters
                 return;
             }
 
+            Vector3 unityPosition =
+                ToUnityPosition(e.Position);
 
+
+            Debug.Log(
+                $"Converted: {unityPosition}");
             view.SetPosition(
-                ToUnityPosition(e.Position));
+                unityPosition);
         }
 
 
@@ -259,7 +266,8 @@ namespace Bunshimokei.Unity.Presenters
             view.Initialize(
                 atomA.transform,
                 atomB.transform,
-                bond.BondOrder);
+                bond.BondOrder,
+                displaySettings.GetBondRadiusUnity());
 
 
 

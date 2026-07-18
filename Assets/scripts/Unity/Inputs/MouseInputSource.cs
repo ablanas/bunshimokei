@@ -77,8 +77,8 @@ namespace Bunshimokei.Unity.Inputs
                     ray,
                     out RaycastHit hit))
             {
-                Debug.Log(
-                    $"Ray Hit {hit.collider.name} : {hit.point}");
+                // Debug.Log(
+                //     $"Ray Hit {hit.collider.name} : {hit.point}");
 
                 return new PointerInputData(
                     hit.point,
@@ -86,13 +86,25 @@ namespace Bunshimokei.Unity.Inputs
             }
 
 
-            Debug.Log(
-                $"Ray Miss : {ray.GetPoint(DefaultDistance)}");
+            // Debug.Log(
+            //     $"Ray Miss : {ray.GetPoint(DefaultDistance)}");
 
 
             return new PointerInputData(
                 ray.GetPoint(DefaultDistance),
                 null);
+        }
+        public Vector3 GetWorldPositionAtDistance(
+            float distance)
+        {
+            Vector2 mousePosition =
+                Mouse.current.position.ReadValue();
+
+            Ray ray =
+                targetCamera.ScreenPointToRay(
+                    mousePosition);
+
+            return ray.GetPoint(distance);
         }
     }
 }

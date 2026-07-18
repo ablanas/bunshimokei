@@ -1,6 +1,8 @@
 using Bunshimokei.Unity.Controllers;
 using UnityEngine;
 
+namespace Bunshimokei.Unity.UI;
+
 public sealed class ElementButton : MonoBehaviour
 {
     [SerializeField]

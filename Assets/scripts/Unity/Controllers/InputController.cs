@@ -14,8 +14,13 @@ public sealed class InputController : MonoBehaviour
     [SerializeField]
     private MoleculeInputController moleculeInputController = null!;
 
+    [SerializeField]
+    private AtomPlacementController atomPlacementController = null!;
+
 
     private IInputSource _inputSource = null!;
+
+    private bool _isDragging;
 
 
     private void Awake()
@@ -46,23 +51,30 @@ public sealed class InputController : MonoBehaviour
     private void OnPointerDown(
         PointerInputData data)
     {
-        if (data.Target == null)
-            return;
-
-        if (!data.Target.TryGetComponent(
-                out AtomView? atomView))
+        if (data.Target != null &&
+            data.Target.TryGetComponent(
+                out AtomView atomView))
         {
+            _isDragging = true;
+
+            moleculeInputController.BeginDrag(
+                atomView.Data.Id);
+
             return;
         }
 
-        moleculeInputController.BeginDrag(
-            atomView!.Data.Id);
+
+        atomPlacementController.PlaceAtom(
+            data.WorldPosition);
     }
 
 
     private void OnPointerMove(
         PointerInputData data)
     {
+        if (!_isDragging)
+            return;
+
 
         moleculeInputController.UpdateDrag(
             data.WorldPosition);
@@ -70,10 +82,14 @@ public sealed class InputController : MonoBehaviour
 
 
     private void OnPointerUp(
-        PointerInputData data)
+        PointerInputData _)
     {
+        if (!_isDragging)
+            return;
+
 
         moleculeInputController.EndDrag();
 
+        _isDragging = false;
     }
 }

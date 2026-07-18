@@ -191,14 +191,19 @@ namespace Bunshimokei.Unity.Presenters
         private void CreateAtomView(
             AtomData atom)
         {
-            if (_atomViews.ContainsKey(atom.Id))
-                return;
+            Debug.Log(
+                $"Atom Position(pm): {atom.Position.X}, {atom.Position.Y}, {atom.Position.Z}");
 
+            Vector3 unityPosition =
+                ToUnityPosition(atom.Position);
+
+            Debug.Log(
+                $"Unity Position: {unityPosition}");
 
             AtomView view =
                 Instantiate(
                     atomPrefab,
-                    ToUnityPosition(atom.Position),
+                    unityPosition,
                     Quaternion.identity,
                     atomParent);
 

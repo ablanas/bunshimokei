@@ -68,7 +68,6 @@ namespace Bunshimokei.Unity.Inputs
             Vector2 mousePosition =
                 Mouse.current.position.ReadValue();
 
-
             Ray ray =
                 targetCamera.ScreenPointToRay(
                     mousePosition);
@@ -78,10 +77,17 @@ namespace Bunshimokei.Unity.Inputs
                     ray,
                     out RaycastHit hit))
             {
+                Debug.Log(
+                    $"Ray Hit {hit.collider.name} : {hit.point}");
+
                 return new PointerInputData(
                     hit.point,
                     hit.collider.gameObject);
             }
+
+
+            Debug.Log(
+                $"Ray Miss : {ray.GetPoint(DefaultDistance)}");
 
 
             return new PointerInputData(

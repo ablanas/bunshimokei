@@ -18,6 +18,8 @@ namespace Bunshimokei.Unity.Controllers
         [SerializeField]
         private AtomPlacementController atomPlacementController = null!;
 
+        private float _dragDistance;
+
 
         private IInputSource _inputSource = null!;
 
@@ -43,6 +45,10 @@ namespace Bunshimokei.Unity.Controllers
 
         private void OnDisable()
         {
+            if (_inputSource == null)
+                return;
+
+
             _inputSource.PointerDown -= OnPointerDown;
             _inputSource.PointerMove -= OnPointerMove;
             _inputSource.PointerUp -= OnPointerUp;
@@ -57,6 +63,12 @@ namespace Bunshimokei.Unity.Controllers
                     out AtomView atomView))
             {
                 _isDragging = true;
+
+                _dragDistance =
+                    Vector3.Distance(
+                        Camera.main.transform.position,
+                        atomView.transform.position);
+
 
                 moleculeInputController.BeginDrag(
                     atomView.Data.Id);

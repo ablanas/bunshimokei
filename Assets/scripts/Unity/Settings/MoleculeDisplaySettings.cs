@@ -22,4 +22,9 @@ public sealed class MoleculeDisplaySettings : ScriptableObject
     {
         return pm * PmToUnityScale;
     }
+
+    public float ConvertUnityToPm(float unity)
+    {
+        return unity / PmToUnityScale;
+    }
 }

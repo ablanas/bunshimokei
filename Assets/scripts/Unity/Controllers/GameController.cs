@@ -7,6 +7,7 @@ using Bunshimokei.Infrastructure.Modding;
 using Bunshimokei.Unity.Controllers;
 using Bunshimokei.Unity.Presenters;
 using Bunshimokei.Unity.Services;
+using Bunshimokei.Unity.Settings;
 using System.IO;
 using UnityEngine;
 
@@ -29,6 +30,9 @@ namespace Bunshimokei.Unity
 
         [SerializeField]
         private ElementPalettePresenter elementPalettePresenter = null!;
+
+        [SerializeField]
+        private MoleculeDisplaySettings displaySettings = null!;
 
         public ElementDatabase Database { get; private set; } = null!;
 
@@ -79,7 +83,8 @@ namespace Bunshimokei.Unity
 
             atomPlacementController.Initialize(
                 Molecule,
-                _selectedElementService);
+                _selectedElementService,
+                displaySettings);
 
 
             elementPaletteController.Initialize(

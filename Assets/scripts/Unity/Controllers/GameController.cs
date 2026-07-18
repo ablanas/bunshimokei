@@ -2,6 +2,7 @@ using Bunshimokei.Core.Chemistry;
 using Bunshimokei.Core.Interfaces;
 using Bunshimokei.Core.Models;
 using Bunshimokei.Core.Services;
+using Bunshimokei.Core.ValueObjects;
 using Bunshimokei.Infrastructure.Modding;
 using Bunshimokei.Unity.Controllers;
 using Bunshimokei.Unity.Presenters;
@@ -91,6 +92,11 @@ namespace Bunshimokei.Unity
             // ---------- Event ----------
             moleculeInputController.SnapTargetChanged +=
                 moleculePresenter.SetHighlight;
+
+            // ----------Test----------
+            Molecule.AddAtom(
+                Database.Get(new("H")),
+                VectorPm3D.Zero);
         }
 
 

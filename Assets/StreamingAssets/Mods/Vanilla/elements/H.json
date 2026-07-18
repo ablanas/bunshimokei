@@ -1,0 +1,15 @@
+{
+  "Symbol": "H",
+  "DisplayName": "Hydrogen",
+  "AtomicNumber": 1,
+  "Valence": 1,
+  "Color": {
+    "R": 1.0,
+    "G": 1.0,
+    "B": 1.0,
+    "A": 1.0
+  },
+  "CovalentRadiusPm": 31,
+  "VanDerWaalsRadiusPm": 120,
+  "StickDisplayScale": 0.25
+}

@@ -321,16 +321,13 @@ namespace Bunshimokei.Unity.Presenters
                 current.SetHighlight(true);
             }
         }
-
-
-
-        private static Vector3 ToUnityPosition(
+        private Vector3 ToUnityPosition(
             VectorPm3D position)
         {
             return new Vector3(
-                position.X,
-                position.Y,
-                position.Z);
+                displaySettings.ConvertPmToUnity(position.X),
+                displaySettings.ConvertPmToUnity(position.Y),
+                displaySettings.ConvertPmToUnity(position.Z));
         }
     }
 }

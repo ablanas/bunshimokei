@@ -27,13 +27,17 @@ namespace Bunshimokei.Unity.Controllers
 
         public event Action<AtomId?>? SnapTargetChanged;
 
+        private AtomPlacementController _atomPlacementController = null!;
+
 
         public void Initialize(
             MoleculeData molecule,
-            SnapService snapService)
+            SnapService snapService,
+            AtomPlacementController atomPlacementController)
         {
             _molecule = molecule;
             _snapService = snapService;
+            _atomPlacementController = atomPlacementController;
         }
 
 
@@ -129,6 +133,13 @@ namespace Bunshimokei.Unity.Controllers
         private void ClearHighlight()
         {
             SetSnapTarget(null);
+        }
+
+        public void PlaceAt(
+    Vector3 worldPosition)
+        {
+            _atomPlacementController.PlaceAtom(
+                worldPosition);
         }
 
 

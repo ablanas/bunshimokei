@@ -1,5 +1,6 @@
 using Bunshimokei.Unity.Interfaces;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Bunshimokei.Unity.Inputs
 {
@@ -35,31 +36,43 @@ namespace Bunshimokei.Unity.Inputs
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            Mouse mouse = Mouse.current;
+
+            if (mouse == null)
+                return;
+
+
+            if (mouse.leftButton.wasPressedThisFrame)
             {
                 PointerDown?.Invoke(
                     CreatePointerData());
             }
 
-            if (Input.GetMouseButton(0))
+
+            if (mouse.leftButton.isPressed)
             {
                 PointerMove?.Invoke(
                     CreatePointerData());
             }
 
-            if (Input.GetMouseButtonUp(0))
+
+            if (mouse.leftButton.wasReleasedThisFrame)
             {
                 PointerUp?.Invoke(
                     CreatePointerData());
             }
         }
 
-
         private PointerInputData CreatePointerData()
         {
+            Vector2 mousePosition =
+                Mouse.current.position.ReadValue();
+
+
             Ray ray =
                 targetCamera.ScreenPointToRay(
-                    Input.mousePosition);
+                    mousePosition);
+
 
             if (Physics.Raycast(
                     ray,
@@ -69,6 +82,7 @@ namespace Bunshimokei.Unity.Inputs
                     hit.point,
                     hit.collider.gameObject);
             }
+
 
             return new PointerInputData(
                 ray.GetPoint(DefaultDistance),

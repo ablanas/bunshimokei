@@ -81,7 +81,7 @@ namespace Bunshimokei.Unity.Views
                 _propertyBlock);
 
             _propertyBlock.SetColor(
-                "_Color",
+                "_BaseColor",
                 color);
 
             _renderer.SetPropertyBlock(

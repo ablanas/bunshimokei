@@ -71,7 +71,8 @@ namespace Bunshimokei.Unity
 
             moleculeInputController.Initialize(
                 Molecule,
-                snapService);
+                snapService,
+                atomPlacementController);
 
             _selectedElementService = new SelectedElementService();
 
@@ -94,9 +95,9 @@ namespace Bunshimokei.Unity
                 moleculePresenter.SetHighlight;
 
             // ----------Test----------
-            Molecule.AddAtom(
-                Database.Get(new("H")),
-                VectorPm3D.Zero);
+            //Molecule.AddAtom(
+            //    Database.Get(new("H")),
+            //    VectorPm3D.Zero);
         }
 
 

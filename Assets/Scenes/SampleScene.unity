@@ -119,6 +119,53 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1697948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1697950}
+  - component: {fileID: 1697949}
+  m_Layer: 0
+  m_Name: InputController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1697949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2384dbfd1cfcb4d9bbd91dea2e1dd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Bunshimokei.Unity.Controllers.InputController
+  inputSourceBehaviour: {fileID: 1422319871}
+  moleculeInputController: {fileID: 774102416}
+  atomPlacementController: {fileID: 175800230}
+--- !u!4 &1697950
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697948}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.63324, y: -0, z: -2.68607}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &165135432
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,7 +783,7 @@ MonoBehaviour:
   bondPrefab: {fileID: 0}
   atomParent: {fileID: 0}
   bondParent: {fileID: 0}
-  displaySettings: {fileID: 0}
+  displaySettings: {fileID: 11400000, guid: ae2d63d301cb5934d8b7359f6f3c1f58, type: 2}
 --- !u!4 &642408909
 Transform:
   m_ObjectHideFlags: 0
@@ -1505,6 +1552,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1415994010}
   m_CullTransparentMesh: 1
+--- !u!1 &1422319870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1422319872}
+  - component: {fileID: 1422319871}
+  m_Layer: 0
+  m_Name: MouseInputSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1422319871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422319870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ed5de53893b3647ac9564967dd659f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Bunshimokei.Unity.Inputs.MouseInputSource
+  targetCamera: {fileID: 330585545}
+--- !u!4 &1422319872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422319870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.63324, y: -0, z: -2.68607}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1453984331
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,3 +1735,5 @@ SceneRoots:
   - {fileID: 774102417}
   - {fileID: 175800231}
   - {fileID: 688786307}
+  - {fileID: 1697950}
+  - {fileID: 1422319872}
